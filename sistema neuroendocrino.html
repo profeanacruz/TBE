@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapa Conceptual: Sistema Neuroendocrino</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        .perspective { perspective: 1000px; }
+        .preserve-3d { transform-style: preserve-3d; }
+        .backface-hidden { backface-visibility: hidden; }
+        .rotate-y-180 { transform: rotateY(180deg); }
+        .flip-card-inner { transition: transform 0.5s; }
+        .flipped { transform: rotateY(180deg); }
+        
+        @keyframes spin-slow {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .animate-spin-slow { animation: spin-slow 8s linear infinite; }
+    </style>
+</head>
+<body class="bg-slate-100 font-sans text-slate-800 min-h-screen p-4 md:p-8">
+
+    <!-- CABECERA -->
+    <header class="mb-10 text-center">
+        <div class="flex items-center justify-center gap-4 mb-2">
+            <i data-lucide="brain" class="text-blue-600 w-12 h-12"></i>
+            <h1 class="text-4xl font-black text-slate-900 uppercase tracking-tight">Circuito Neuroendocrino</h1>
+            <i data-lucide="droplets" class="text-green-600 w-12 h-12"></i>
+        </div>
+        <div class="h-1 w-24 bg-blue-600 mx-auto rounded-full mb-4"></div>
+        <p class="text-slate-500 font-medium max-w-2xl mx-auto">Explora la interrelación entre el sistema nervioso y las glándulas. Haz clic en las tarjetas para ver detalles y gira las secciones para entender la integración.</p>
+    </header>
+
+    <!-- MAPA PRINCIPAL -->
+    <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8 relative mb-12">
+        
+        <!-- COLUMNA IZQUIERDA: SISTEMA NERVIOSO -->
+        <div class="space-y-6">
+            <h2 class="text-blue-600 font-black flex items-center gap-2 px-2 uppercase tracking-wider">
+                <i data-lucide="zap" class="w-5 h-5"></i> Sistema Nervioso
+            </h2>
+            
+            <!-- SNC Card -->
+            <div class="perspective w-full h-64 cursor-pointer" onclick="toggleFlip(this)">
+                <div class="flip-card-inner relative w-full h-full preserve-3d">
+                    <div class="absolute inset-0 backface-hidden rounded-2xl border-2 border-blue-200 bg-blue-50 p-6 flex flex-col shadow-sm">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="bg-blue-600 p-2 rounded-lg text-white"><i data-lucide="brain"></i></div>
+                            <h3 class="font-bold uppercase text-sm text-blue-900">S.N. Central (SNC)</h3>
+                        </div>
+                        <ul class="space-y-2 text-sm text-blue-800">
+                            <li class="flex items-start gap-2">
+                                <span class="text-blue-400 mt-1">•</span>
+                                <span><b>Encéfalo:</b> Centro de procesamiento y toma de decisiones.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="text-blue-400 mt-1">•</span>
+                                <span><b>Médula:</b> Vía de conducción de impulsos.</span>
+                            </li>
+                        </ul>
+                        <div class="mt-auto flex justify-between items-center opacity-40">
+                            <span class="text-[10px] font-bold italic tracking-widest">GIRAR PARA INTERRELACIÓN</span>
+                            <i data-lucide="refresh-cw" class="w-3.5 h-3.5 animate-spin-slow"></i>
+                        </div>
+                    </div>
+                    <div class="absolute inset-0 backface-hidden rotate-y-180 rounded-2xl border-2 border-slate-700 bg-slate-800 p-6 text-white flex flex-col shadow-xl">
+                        <h4 class="text-xs font-bold text-yellow-400 mb-2 uppercase flex items-center gap-2">
+                            <i data-lucide="waves" class="w-4 h-4"></i> Relación Nervio-Hormona
+                        </h4>
+                        <p class="text-[11px] leading-relaxed">El SNC detecta estímulos del entorno (ej: luz, peligro). La amígdala envía señales al hipotálamo para iniciar la respuesta química. El cerebro además "lee" la sangre para ajustar su conducta.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SNP Card -->
+            <div class="perspective w-full h-64 cursor-pointer" onclick="toggleFlip(this)">
+                <div class="flip-card-inner relative w-full h-full preserve-3d">
+                    <div class="absolute inset-0 backface-hidden rounded-2xl border-2 border-blue-200 bg-blue-50 p-6 flex flex-col shadow-sm">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="bg-blue-600 p-2 rounded-lg text-white"><i data-lucide="activity"></i></div>
+                            <h3 class="font-bold uppercase text-sm text-blue-900">S.N. Periférico (SNP)</h3>
+                        </div>
+                        <p class="text-sm text-blue-800">Red de nervios que conecta el SNC con los receptores sensoriales y los órganos efectores del cuerpo.</p>
+                        <div class="mt-auto flex justify-between items-center opacity-40">
+                            <span class="text-[10px] font-bold italic tracking-widest">GIRAR PARA INTERRELACIÓN</span>
+                            <i data-lucide="refresh-cw" class="w-3.5 h-3.5 animate-spin-slow"></i>
+                        </div>
+                    </div>
+                    <div class="absolute inset-0 backface-hidden rotate-y-180 rounded-2xl border-2 border-slate-700 bg-slate-800 p-6 text-white flex flex-col shadow-xl">
+                        <h4 class="text-xs font-bold text-yellow-400 mb-2 uppercase flex items-center gap-2">
+                            <i data-lucide="waves" class="w-4 h-4"></i> Relación Nervio-Hormona
+                        </h4>
+                        <p class="text-[11px] leading-relaxed">El Sistema Autónomo (SNP) estimula de forma directa glándulas como la Médula Suprarrenal, permitiendo una liberación química casi instantánea ante el estrés.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- COLUMNA CENTRAL: EL PUENTE -->
+        <div class="space-y-6 bg-purple-100/30 p-4 rounded-3xl border border-purple-200 flex flex-col items-center">
+            <h2 class="text-purple-600 font-black flex items-center gap-2 px-2 uppercase tracking-wider">
+                <i data-lucide="refresh-cw" class="w-5 h-5"></i> Eje Integrador
+            </h2>
+
+            <!-- Hipotalamo -->
+            <div class="perspective w-full h-64 cursor-pointer" onclick="toggleFlip(this)">
+                <div class="flip-card-inner relative w-full h-full preserve-3d">
+                    <div class="absolute inset-0 backface-hidden rounded-2xl border-2 border-purple-200 bg-purple-50 p-6 flex flex-col shadow-sm">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="bg-purple-600 p-2 rounded-lg text-white"><i data-lucide="activity"></i></div>
+                            <h3 class="font-bold uppercase text-sm text-purple-900">Hipotálamo</h3>
+                        </div>
+                        <div class="text-center p-4 bg-white rounded-xl border border-purple-100 font-black text-purple-700 tracking-widest">INTEGRADOR</div>
+                        <p class="text-[11px] text-purple-600 text-center mt-3 italic">Convierte el impulso eléctrico en orden química</p>
+                        <div class="mt-auto flex justify-between items-center opacity-40">
+                            <span class="text-[10px] font-bold italic tracking-widest">GIRAR PARA DETALLE</span>
+                            <i data-lucide="refresh-cw" class="w-3.5 h-3.5 animate-spin-slow"></i>
+                        </div>
+                    </div>
+                    <div class="absolute inset-0 backface-hidden rotate-y-180 rounded-2xl border-2 border-slate-700 bg-slate-800 p-6 text-white flex flex-col shadow-xl">
+                        <h4 class="text-xs font-bold text-yellow-400 mb-2 uppercase flex items-center gap-2">
+                            <i data-lucide="waves" class="w-4 h-4"></i> El Punto de Unión
+                        </h4>
+                        <p class="text-[11px] leading-relaxed">Es el verdadero "cerebro endocrino". Recibe información neuronal del SNC y responde liberando neurohormonas que controlan a la hipófisis. Monitoriza la sangre constantemente.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="h-10 w-1 bg-purple-400 shadow-sm"></div>
+
+            <!-- Hipofisis -->
+            <div class="perspective w-full h-64 cursor-pointer" onclick="toggleFlip(this)">
+                <div class="flip-card-inner relative w-full h-full preserve-3d">
+                    <div class="absolute inset-0 backface-hidden rounded-2xl border-2 border-purple-200 bg-purple-50 p-6 flex flex-col shadow-sm">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="bg-purple-600 p-2 rounded-lg text-white"><i data-lucide="droplets"></i></div>
+                            <h3 class="font-bold uppercase text-sm text-purple-900">Hipófisis</h3>
+                        </div>
+                        <p class="text-sm text-purple-800 text-center font-medium">Libera hormonas tróficas (TSH, ACTH, LH, FSH) directamente al torrente sanguíneo.</p>
+                        <div class="mt-auto flex justify-between items-center opacity-40">
+                            <span class="text-[10px] font-bold italic tracking-widest">GIRAR PARA DETALLE</span>
+                            <i data-lucide="refresh-cw" class="w-3.5 h-3.5 animate-spin-slow"></i>
+                        </div>
+                    </div>
+                    <div class="absolute inset-0 backface-hidden rotate-y-180 rounded-2xl border-2 border-slate-700 bg-slate-800 p-6 text-white flex flex-col shadow-xl">
+                        <h4 class="text-xs font-bold text-yellow-400 mb-2 uppercase flex items-center gap-2">
+                            <i data-lucide="waves" class="w-4 h-4"></i> Amplificador
+                        </h4>
+                        <p class="text-[11px] leading-relaxed">Funciona como una antena emisora. Recibe señales locales del hipotálamo y las convierte en una señal sistémica masiva que llega a todas las glándulas efectoras.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- COLUMNA DERECHA: GLÁNDULAS -->
+        <div class="space-y-4">
+            <h2 class="text-green-600 font-black flex items-center gap-2 px-2 uppercase tracking-wider">
+                <i data-lucide="heart-pulse" class="w-5 h-5"></i> Glándulas Efectoras
+            </h2>
+            
+            <div id="glandContainer" class="grid grid-cols-1 gap-4">
+                <!-- Generado por JS -->
+            </div>
+
+            <div class="mt-6 p-5 bg-red-50 border border-red-200 rounded-2xl shadow-sm">
+                <div class="flex items-center gap-2 text-red-600 font-bold mb-2">
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i> FEEDBACK NEGATIVO
+                </div>
+                <p class="text-[11px] text-red-800 leading-tight">
+                    Cuando el nivel hormonal en sangre es alto, el <b>Hipotálamo</b> detecta la señal (humoral) e inhibe la orden, manteniendo el equilibrio (homeostasis).
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- LEYENDA INFERIOR (CAJAS ORIGINALES) -->
+    <footer class="mt-12 grid grid-cols-1 md:grid-cols-4 gap-4 max-w-7xl mx-auto pb-10">
+        <div class="bg-white p-4 rounded-xl border-l-4 border-blue-500 shadow-sm flex items-center gap-4">
+           <div class="text-blue-500 font-black text-2xl italic">1</div>
+           <p class="text-xs font-bold text-slate-600">El Sistema Nervioso manda la señal inicial mediante impulsos eléctricos.</p>
+        </div>
+        <div class="bg-white p-4 rounded-xl border-l-4 border-purple-500 shadow-sm flex items-center gap-4">
+           <div class="text-purple-500 font-black text-2xl italic">2</div>
+           <p class="text-xs font-bold text-slate-600">El Hipotálamo actúa como bisagra integrando ambas señales.</p>
+        </div>
+        <div class="bg-white p-4 rounded-xl border-l-4 border-purple-600 shadow-sm flex items-center gap-4">
+           <div class="text-purple-600 font-black text-2xl italic">3</div>
+           <p class="text-xs font-bold text-slate-600">La Hipófisis amplifica y distribuye el mensaje por la sangre.</p>
+        </div>
+        <div class="bg-white p-4 rounded-xl border-l-4 border-red-500 shadow-sm flex items-center gap-4">
+           <div class="text-red-500 font-black text-2xl italic">4</div>
+           <p class="text-xs font-bold text-slate-600">Las hormonas retornan e inhiben el sistema para evitar el exceso.</p>
+        </div>
+    </footer>
+
+    <!-- MODAL DE DETALLE -->
+    <div id="detailModal" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl shadow-2xl w-full max-w-xl overflow-hidden border-t-8 border-yellow-500 animate-in fade-in zoom-in duration-200">
+            <div class="p-8">
+                <div class="flex justify-between items-start mb-6">
+                    <div>
+                        <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Información Clínica</span>
+                        <h2 id="modalName" class="text-3xl font-black text-slate-900 mt-1">Nombre Glándula</h2>
+                    </div>
+                    <button onclick="closeModal()" class="bg-slate-100 hover:bg-slate-200 p-2 rounded-full transition">
+                        <i data-lucide="x" class="w-5 h-5 text-slate-500"></i>
+                    </button>
+                </div>
+
+                <div class="space-y-4">
+                    <div class="bg-blue-50 p-4 rounded-xl border border-blue-100">
+                        <span class="text-[10px] font-bold text-blue-600 uppercase">Hormonas Clave</span>
+                        <p id="modalHormones" class="font-bold text-slate-800 text-lg">Hormonas...</p>
+                    </div>
+                    
+                    <div class="bg-green-50 p-4 rounded-xl border border-green-100">
+                        <span class="text-[10px] font-bold text-green-600 uppercase">Función Regulada</span>
+                        <p id="modalFunc" class="text-slate-700 font-medium">Función...</p>
+                    </div>
+
+                    <div class="bg-red-50 p-4 rounded-xl border border-red-100">
+                        <span class="text-[10px] font-bold text-red-600 uppercase">Patologías Asociadas</span>
+                        <p id="modalPath" class="text-slate-800 font-bold">Patología...</p>
+                    </div>
+
+                    <div class="bg-slate-900 p-5 rounded-2xl text-white">
+                        <span class="text-[10px] font-bold text-yellow-400 uppercase flex items-center gap-2 mb-1">
+                            <i data-lucide="brain" class="w-3.5 h-3.5"></i> Interrelación Nerviosa
+                        </span>
+                        <p id="modalNeuro" class="text-xs text-blue-100 leading-relaxed italic">Cargando interrelación...</p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-slate-50 p-4 flex justify-center">
+                <button onclick="closeModal()" class="bg-slate-800 text-white px-8 py-2 rounded-xl font-bold hover:bg-slate-700 transition">
+                    Cerrar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Datos de glándulas
+        const glands = [
+            { id: 'tiroides', name: 'Tiroides', label: 'METABOLISMO', border: 'border-green-500', h: 'T3 y T4', f: 'Regula el metabolismo basal, temperatura y ritmo cardíaco.', p: 'Hipotiroidismo / Hipertiroidismo', n: 'La T3 es esencial para la maduración neuronal. Su déficit en adultos causa bradicardia mental y fatiga extrema.' },
+            { id: 'suprarrenal', name: 'Suprarrenales', label: 'ESTRÉS', border: 'border-red-500', h: 'Cortisol y Adrenalina', f: 'Respuesta inflamatoria, niveles de glucosa y manejo del estrés.', p: 'Enfermedad de Cushing / Addison', n: 'El cortisol alto prolongado (estrés crónico) atrofia las neuronas del hipocampo, afectando seriamente la memoria.' },
+            { id: 'gonadas', name: 'Gónadas', label: 'REPRODUCCIÓN', border: 'border-blue-400', h: 'Estrógenos / Testosterona', f: 'Desarrollo de caracteres sexuales y ciclo reproductivo.', p: 'Amenorrea / Hipogonadismo', n: 'Estas hormonas modulan neurotransmisores como la serotonina, influyendo directamente en el estado de ánimo y la agresividad.' },
+            { id: 'pancreas', name: 'Páncreas', label: 'GLUCEMIA', border: 'border-orange-500', h: 'Insulina / Glucagón', f: 'Control de los niveles de azúcar en el torrente sanguíneo.', p: 'Diabetes Mellitus Tipo 1 y 2', n: 'Las neuronas dependen exclusivamente de la glucosa. Un fallo pancreático (hipoglucemia) desconecta el sistema nervioso rápidamente (coma).' }
+        ];
+
+        // Iniciar App
+        window.onload = () => {
+            lucide.createIcons();
+            renderGlands();
+        };
+
+        function renderGlands() {
+            const container = document.getElementById('glandContainer');
+            container.innerHTML = glands.map(g => `
+                <div class="bg-white p-4 rounded-xl border-l-8 ${g.border} shadow-sm hover:shadow-md transition cursor-pointer flex justify-between items-center group" onclick="openModal('${g.id}')">
+                    <div class="flex flex-col">
+                        <span class="font-bold text-slate-700 group-hover:text-blue-600 transition">${g.name}</span>
+                        <span class="text-[10px] text-slate-400 font-medium">${g.h}</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                         <span class="text-[10px] bg-slate-100 px-2 py-0.5 rounded-full font-bold text-slate-500 uppercase">${g.label}</span>
+                         <i data-lucide="chevron-right" class="w-4 h-4 text-slate-300"></i>
+                    </div>
+                </div>
+            `).join('');
+            lucide.createIcons();
+        }
+
+        window.openModal = (id) => {
+            const gland = glands.find(g => g.id === id);
+            document.getElementById('modalName').innerText = gland.name;
+            document.getElementById('modalHormones').innerText = gland.h;
+            document.getElementById('modalFunc').innerText = gland.f;
+            document.getElementById('modalPath').innerText = gland.p;
+            document.getElementById('modalNeuro').innerText = gland.n;
+            document.getElementById('detailModal').classList.remove('hidden');
+            lucide.createIcons();
+        };
+
+        window.closeModal = () => {
+            document.getElementById('detailModal').classList.add('hidden');
+        };
+
+        window.toggleFlip = (el) => {
+            const inner = el.querySelector('.flip-card-inner');
+            inner.classList.toggle('flipped');
+        };
+    </script>
+</body>
+</html>
