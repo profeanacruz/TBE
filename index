@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>TBE - Mapas interactivos</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-100 min-h-screen p-6">
+  <div class="max-w-3xl mx-auto">
+    <h1 class="text-3xl font-black text-slate-900 mb-2">TBE · Mapas interactivos</h1>
+    <p class="text-slate-600 mb-6">Accede a los recursos de clase.</p>
+
+    <div class="grid gap-4">
+      <a class="block bg-white p-5 rounded-2xl border hover:shadow-md transition"
+         href="./neuroendocrino.html">
+        <div class="font-bold text-slate-900">Circuito neuroendocrino</div>
+        <div class="text-sm text-slate-500">Hipotálamo–hipófisis–glándulas · feedback</div>
+      </a>
+
+      <a class="block bg-white p-5 rounded-2xl border hover:shadow-md transition"
+         href="./otro-mapa.html">
+        <div class="font-bold text-slate-900">Otro mapa (pendiente)</div>
+        <div class="text-sm text-slate-500">Añadir descripción</div>
+      </a>
+    </div>
+  </div>
+</body>
+</html>
