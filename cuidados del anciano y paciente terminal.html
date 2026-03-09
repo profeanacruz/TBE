@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TBE · Tema 15 · El Anciano y el Paciente Terminal</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
+
+    :root {
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --text: #0f172a;
+      --muted: #475569;
+      --line: #7dd3fc;
+      --line-soft: #cbd5e1;
+      --accent: #4f46e5;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: 'Outfit', sans-serif;
+      background:
+        radial-gradient(circle at top left, #eef2ff 0%, transparent 28%),
+        radial-gradient(circle at top right, #ecfeff 0%, transparent 22%),
+        var(--bg);
+      color: var(--text);
+    }
+
+    .glass {
+      background: rgba(255,255,255,.82);
+      backdrop-filter: blur(10px);
+    }
+
+    .node-card {
+      transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+    }
+
+    .node-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 24px 40px -18px rgba(15, 23, 42, .22);
+      border-color: #a5b4fc;
+    }
+
+    .hero-image,
+    .resource-image {
+      width: 100%;
+      display: block;
+      object-fit: cover;
+      border-radius: 1.5rem;
+      image-rendering: auto;
+    }
+
+    .hero-image {
+      max-height: 520px;
+      object-position: center;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 20px 35px -20px rgba(15, 23, 42, .35);
+    }
+
+    .resource-image {
+      aspect-ratio: 16 / 10;
+      border: 1px solid #e2e8f0;
+      background: #f8fafc;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      border-radius: 999px;
+      padding: .5rem .9rem;
+      font-size: .72rem;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .mindmap-wrapper {
+      overflow: auto;
+      padding-bottom: 1rem;
+      max-height: 78vh;
+      border-radius: 1.5rem;
+    }
+
+    .map-modal-backdrop {
+      background: rgba(15, 23, 42, .72);
+      backdrop-filter: blur(8px);
+    }
+
+    .map-modal-card {
+      width: min(96vw, 1700px);
+      height: min(92vh, 1100px);
+    }
+
+    .mindmap-svg {
+      min-width: 1400px;
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .map-node rect {
+      fill: #ffffff;
+      stroke: #cbd5e1;
+      stroke-width: 1.5;
+      rx: 20;
+      ry: 20;
+      filter: drop-shadow(0 12px 16px rgba(15, 23, 42, .08));
+      transition: .25s ease;
+    }
+
+    .map-node text {
+      font-family: 'Outfit', sans-serif;
+      fill: #0f172a;
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .map-node.small text {
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .map-node.main rect {
+      fill: #eef2ff;
+      stroke: #818cf8;
+      stroke-width: 2.2;
+    }
+
+    .map-node.branch rect {
+      fill: #eff6ff;
+      stroke: #93c5fd;
+    }
+
+    .map-node.leaf rect {
+      fill: #ecfeff;
+      stroke: #99f6e4;
+    }
+
+    .map-node:hover rect {
+      stroke: #4f46e5;
+      transform-box: fill-box;
+      transform-origin: center;
+      transform: translateY(-2px);
+    }
+
+    .map-link-main {
+      fill: none;
+      stroke: #818cf8;
+      stroke-width: 4;
+      stroke-linecap: round;
+    }
+
+    .map-link-branch {
+      fill: none;
+      stroke: #38bdf8;
+      stroke-width: 3;
+      stroke-linecap: round;
+    }
+
+    .map-link-leaf {
+      fill: none;
+      stroke: #5eead4;
+      stroke-width: 2.6;
+      stroke-linecap: round;
+    }
+
+    .quiz-option {
+      border: 1px solid #cbd5e1;
+      transition: .2s ease;
+    }
+
+    .quiz-option:hover {
+      border-color: #818cf8;
+      background: #eef2ff;
+    }
+
+    .quiz-option.correct {
+      border-color: #16a34a;
+      background: #f0fdf4;
+      color: #166534;
+    }
+
+    .quiz-option.incorrect {
+      border-color: #dc2626;
+      background: #fef2f2;
+      color: #991b1b;
+    }
+
+    .quiz-option.disabled {
+      pointer-events: none;
+      opacity: .96;
+    }
+
+    .fade-in {
+      animation: fadeIn .28s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body class="p-4 md:p-8 lg:p-10 text-slate-800">
+  <div class="max-w-7xl mx-auto space-y-10">
+
+    <header class="glass rounded-[2rem] border border-white/70 shadow-xl p-6 md:p-10">
+      <div>
+        <span class="badge bg-indigo-600 text-white shadow-md">TBE · Unidad Didáctica 15</span>
+        <h1 class="text-4xl md:text-5xl font-extrabold text-slate-900 mt-5 leading-tight">El Anciano y el Paciente Terminal</h1>
+        <p class="mt-4 text-slate-600 text-lg leading-relaxed">Recurso interactivo para TCAE/TBE con mapa conceptual desplegable, imágenes de apoyo y autoevaluación integrada.</p>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-6 text-sm">
+          <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm">
+            <p class="font-bold text-slate-900">1. Comprende</p>
+            <p class="text-slate-600 mt-1">Cambios del anciano, fragilidad y patologías frecuentes.</p>
+          </div>
+          <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm">
+            <p class="font-bold text-slate-900">2. Cuida</p>
+            <p class="text-slate-600 mt-1">Intervenciones del TCAE con enfoque técnico y humano.</p>
+          </div>
+          <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm">
+            <p class="font-bold text-slate-900">3. Evalúate</p>
+            <p class="text-slate-600 mt-1">Test interactivo con corrección inmediata y puntuación.</p>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <section class="bg-white rounded-[2rem] border border-slate-200 shadow-lg p-6 md:p-8">
+      <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4 mb-6">
+        <div>
+          <span class="badge bg-sky-100 text-sky-700">Mapa conceptual real</span>
+          <h2 class="text-3xl font-extrabold text-slate-900 mt-3">Mapa en SVG con líneas conectadas</h2>
+          <p class="text-slate-600 mt-2 max-w-3xl">Ahora el mapa queda recogido y solo se despliega cuando el alumno lo necesita. Así se ve más limpio y manejable.</p>
+        </div>
+        <div class="flex flex-wrap gap-3">
+          <button id="toggleMap" class="inline-flex items-center gap-2 rounded-2xl bg-indigo-600 text-white px-5 py-3 font-semibold hover:bg-indigo-500 transition-all">
+            <i data-lucide="expand" class="w-4 h-4"></i>
+            Abrir mapa
+          </button>
+          <button id="openMapInfo" class="inline-flex items-center gap-2 rounded-2xl bg-slate-900 text-white px-5 py-3 font-semibold hover:bg-slate-800 transition-all">
+            <i data-lucide="info" class="w-4 h-4"></i>
+            Cómo estudiarlo
+          </button>
+        </div>
+      </div>
+
+      <div id="mapContainer" class="hidden fixed inset-0 z-50 map-modal-backdrop p-3 md:p-6 items-center justify-center">
+        <div class="map-modal-card bg-white rounded-[2rem] border border-slate-200 shadow-2xl flex flex-col overflow-hidden fade-in">
+          <div class="flex items-center justify-between gap-4 px-5 md:px-7 py-4 border-b border-slate-200 bg-white">
+            <div>
+              <p class="text-xs uppercase tracking-[0.18em] text-indigo-600 font-bold">Mapa conceptual ampliado</p>
+              <h3 class="text-xl md:text-2xl font-extrabold text-slate-900 mt-1">El Anciano y el Paciente Terminal</h3>
+            </div>
+            <button id="closeMapModal" class="inline-flex items-center gap-2 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2.5 font-semibold transition-all">
+              <i data-lucide="x" class="w-4 h-4"></i>
+              Cerrar
+            </button>
+          </div>
+
+          <div class="mindmap-wrapper bg-slate-50 p-4 md:p-6 flex-1">
+        <svg viewBox="0 0 1820 1180" class="mindmap-svg" aria-labelledby="mindmapTitle" role="img">
+          <title id="mindmapTitle">Mapa conceptual de El Anciano y el Paciente Terminal</title>
+
+          <!-- enlaces principales -->
+          <path class="map-link-main" d="M180,590 C240,590 250,160 360,160" />
+          <path class="map-link-main" d="M180,590 C240,590 250,360 360,360" />
+          <path class="map-link-main" d="M180,590 C240,590 250,565 360,565" />
+          <path class="map-link-main" d="M180,590 C240,590 250,820 360,820" />
+          <path class="map-link-main" d="M180,590 C240,590 250,1035 360,1035" />
+
+          <!-- cambios en el anciano -->
+          <path class="map-link-branch" d="M560,360 C650,360 640,250 740,250" />
+          <path class="map-link-branch" d="M560,360 C650,360 640,415 740,415" />
+          <path class="map-link-leaf" d="M960,250 C1055,250 1040,185 1150,185" />
+          <path class="map-link-leaf" d="M960,250 C1055,250 1040,235 1150,235" />
+          <path class="map-link-leaf" d="M960,250 C1055,250 1040,285 1150,285" />
+          <path class="map-link-leaf" d="M960,250 C1055,250 1040,335 1150,335" />
+          <path class="map-link-leaf" d="M960,415 C1055,415 1040,360 1150,360" />
+          <path class="map-link-leaf" d="M960,415 C1055,415 1040,410 1150,410" />
+          <path class="map-link-leaf" d="M960,415 C1055,415 1040,460 1150,460" />
+          <path class="map-link-leaf" d="M960,415 C1055,415 1040,510 1150,510" />
+
+          <!-- patologías -->
+          <path class="map-link-branch" d="M560,565 C665,565 660,470 795,470" />
+          <path class="map-link-branch" d="M560,565 C665,565 660,525 795,525" />
+          <path class="map-link-branch" d="M560,565 C665,565 660,580 795,580" />
+          <path class="map-link-branch" d="M560,565 C665,565 660,635 795,635" />
+          <path class="map-link-branch" d="M560,565 C665,565 660,690 795,690" />
+          <path class="map-link-branch" d="M560,565 C665,565 660,745 795,745" />
+
+          <!-- cuidados al anciano -->
+          <path class="map-link-branch" d="M560,820 C670,820 660,735 820,735" />
+          <path class="map-link-branch" d="M560,820 C670,820 660,790 820,790" />
+          <path class="map-link-branch" d="M560,820 C670,820 660,845 820,845" />
+          <path class="map-link-branch" d="M560,820 C670,820 660,900 820,900" />
+          <path class="map-link-branch" d="M560,820 C670,820 660,955 820,955" />
+
+          <!-- paliativos -->
+          <path class="map-link-branch" d="M560,1035 C665,1035 660,915 820,915" />
+          <path class="map-link-branch" d="M560,1035 C665,1035 660,970 820,970" />
+          <path class="map-link-branch" d="M560,1035 C665,1035 660,1025 820,1025" />
+          <path class="map-link-branch" d="M560,1035 C665,1035 660,1080 820,1080" />
+          <path class="map-link-leaf" d="M1040,1080 C1120,1080 1110,1030 1240,1030" />
+          <path class="map-link-leaf" d="M1040,1080 C1120,1080 1110,1080 1240,1080" />
+          <path class="map-link-leaf" d="M1040,1080 C1120,1080 1110,1130 1240,1130" />
+
+          <path class="map-link-branch" d="M560,1035 C650,1035 640,1170 820,1170" />
+          <path class="map-link-branch" d="M560,1035 C650,1035 640,1165 820,1165" />
+          <path class="map-link-branch" d="M560,1035 C650,1035 640,1110 820,1110" />
+          <path class="map-link-leaf" d="M1040,1165 C1125,1165 1110,1115 1240,1115" />
+          <path class="map-link-leaf" d="M1040,1165 C1125,1165 1110,1165 1240,1165" />
+          <path class="map-link-leaf" d="M1040,1165 C1125,1165 1110,1215 1240,1215" />
+          <path class="map-link-branch" d="M560,1035 C665,1035 660,1125 820,1125" />
+
+          <!-- root -->
+          <g class="map-node main" data-title="Tema central" data-content="Integra envejecimiento, fragilidad, cuidados al anciano, paliativos, duelo y post mortem.">
+            <rect x="10" y="550" width="220" height="78" />
+            <text x="120" y="592" text-anchor="middle">El Anciano y el Paciente Terminal</text>
+          </g>
+
+          <!-- left branches -->
+          <g class="map-node branch" data-title="Envejecimiento" data-content="Proceso biológico progresivo e irreversible con repercusión en todos los sistemas.">
+            <rect x="360" y="120" width="250" height="78" />
+            <text x="485" y="164" text-anchor="middle">Envejecimiento: concepto y realidad</text>
+          </g>
+
+          <g class="map-node branch" data-title="Cambios en el anciano" data-content="Incluye cambios físicos, funcionales, psicológicos y sociales que condicionan los cuidados.">
+            <rect x="360" y="320" width="240" height="78" />
+            <text x="480" y="365" text-anchor="middle">Cambios en el anciano</text>
+          </g>
+
+          <g class="map-node branch" data-title="Patologías frecuentes" data-content="La pluripatología es habitual y exige observación, prevención y apoyo continuado del TCAE.">
+            <rect x="360" y="525" width="240" height="78" />
+            <text x="480" y="570" text-anchor="middle">Patologías frecuentes</text>
+          </g>
+
+          <g class="map-node branch" data-title="Cuidados del TCAE al anciano" data-content="Higiene, movilización, prevención de úlceras, caídas, alimentación e hidratación.">
+            <rect x="360" y="780" width="270" height="78" />
+            <text x="495" y="825" text-anchor="middle">Cuidados del TCAE al anciano</text>
+          </g>
+
+          <g class="map-node branch" data-title="Paciente terminal" data-content="El objetivo cambia de curar a aliviar, acompañar y preservar la dignidad.">
+            <rect x="360" y="995" width="305" height="78" />
+            <text x="512" y="1040" text-anchor="middle">Paciente terminal y cuidados paliativos</text>
+          </g>
+
+          <g class="map-node branch" data-title="Duelo y post mortem" data-content="Comprender el duelo y aplicar el protocolo post mortem con respeto y seguridad.">
+            <rect x="360" y="1090" width="280" height="78" />
+            <text x="500" y="1135" text-anchor="middle">Duelo y cuidados post mortem</text>
+          </g>
+
+          <g class="map-node leaf small" data-title="Proceso progresivo" data-content="El envejecimiento no es una enfermedad, sino un proceso fisiológico acumulativo.">
+            <rect x="1150" y="155" width="290" height="58" />
+            <text x="1295" y="190" text-anchor="middle">Proceso biológico progresivo e irreversible</text>
+          </g>
+          <g class="map-node leaf small" data-title="Actividad celular" data-content="Disminuye la actividad celular y la capacidad de regeneración tisular.">
+            <rect x="1150" y="205" width="255" height="58" />
+            <text x="1278" y="240" text-anchor="middle">Disminución de actividad celular</text>
+          </g>
+          <g class="map-node leaf small" data-title="Órganos y sistemas" data-content="Afecta piel, huesos, músculos, sentidos y mecanismos de regulación interna.">
+            <rect x="1150" y="255" width="305" height="58" />
+            <text x="1302" y="290" text-anchor="middle">Impacto en todos los órganos y sistemas</text>
+          </g>
+          <g class="map-node leaf small" data-title="Realidad demográfica" data-content="El aumento de la esperanza de vida incrementa la demanda asistencial.">
+            <rect x="1150" y="305" width="315" height="58" />
+            <text x="1307" y="340" text-anchor="middle">Realidad demográfica: sociedad que envejece</text>
+          </g>
+
+          <g class="map-node branch" data-title="Físicos y funcionales" data-content="Pérdida de estatura, sarcopenia, fragilidad cutánea y alteración térmica.">
+            <rect x="740" y="210" width="220" height="78" />
+            <text x="850" y="255" text-anchor="middle">Físicos y funcionales</text>
+          </g>
+          <g class="map-node branch" data-title="Psicológicos y sociales" data-content="Menor concentración, alteración de memoria reciente y riesgo de aislamiento.">
+            <rect x="740" y="375" width="235" height="78" />
+            <text x="857" y="420" text-anchor="middle">Psicológicos y sociales</text>
+          </g>
+
+          <g class="map-node leaf small" data-title="Pérdida de peso" data-content="Es frecuente la pérdida de peso y estatura por cambios óseos y musculares.">
+            <rect x="1450" y="160" width="250" height="58" />
+            <text x="1575" y="195" text-anchor="middle">Pérdida de peso y estatura</text>
+          </g>
+          <g class="map-node leaf small" data-title="Sarcopenia" data-content="La sarcopenia reduce fuerza y funcionalidad; la fragilidad ósea aumenta fracturas.">
+            <rect x="1450" y="220" width="255" height="58" />
+            <text x="1577" y="255" text-anchor="middle">Sarcopenia y fragilidad ósea</text>
+          </g>
+          <g class="map-node leaf small" data-title="Piel" data-content="La piel se vuelve fina, seca y vulnerable a lesiones y úlceras.">
+            <rect x="1450" y="280" width="220" height="58" />
+            <text x="1560" y="315" text-anchor="middle">Piel fina, seca y frágil</text>
+          </g>
+          <g class="map-node leaf small" data-title="Termorregulación" data-content="El anciano regula peor la temperatura y requiere entorno estable.">
+            <rect x="1450" y="340" width="255" height="58" />
+            <text x="1577" y="375" text-anchor="middle">Menor regulación térmica</text>
+          </g>
+          <g class="map-node leaf small" data-title="Menor concentración" data-content="Requiere explicaciones simples, repeticiones y ambiente tranquilo.">
+            <rect x="1450" y="335" width="295" height="58" />
+            <text x="1597" y="370" text-anchor="middle">Menor capacidad de concentración</text>
+          </g>
+          <g class="map-node leaf small" data-title="Memoria reciente" data-content="Se altera la memoria reciente, conservándose mejor la memoria remota.">
+            <rect x="1450" y="395" width="280" height="58" />
+            <text x="1590" y="430" text-anchor="middle">Alteración de memoria reciente</text>
+          </g>
+          <g class="map-node leaf small" data-title="Relaciones sociales" data-content="Se reduce la red social y la participación comunitaria.">
+            <rect x="1450" y="455" width="285" height="58" />
+            <text x="1592" y="490" text-anchor="middle">Reducción de relaciones sociales</text>
+          </g>
+          <g class="map-node leaf small" data-title="Soledad" data-content="Existe riesgo de soledad, aislamiento, depresión y pérdida de motivación.">
+            <rect x="1450" y="515" width="265" height="58" />
+            <text x="1582" y="550" text-anchor="middle">Riesgo de soledad y aislamiento</text>
+          </g>
+
+          <g class="map-node leaf small" data-title="Locomotor" data-content="Artrosis, osteoporosis y fracturas con limitación funcional.">
+            <rect x="795" y="440" width="270" height="58" />
+            <text x="930" y="475" text-anchor="middle">Locomotor: artrosis y osteoporosis</text>
+          </g>
+          <g class="map-node leaf small" data-title="Respiratorio" data-content="EPOC, neumonías y disnea requieren vigilancia estrecha.">
+            <rect x="795" y="495" width="260" height="58" />
+            <text x="925" y="530" text-anchor="middle">Respiratorio: EPOC y neumonías</text>
+          </g>
+          <g class="map-node leaf small" data-title="Cardiovascular" data-content="Hipertensión, insuficiencia cardiaca y enfermedad coronaria.">
+            <rect x="795" y="550" width="365" height="58" />
+            <text x="977" y="585" text-anchor="middle">Cardiovascular: hipertensión e insuficiencia cardíaca</text>
+          </g>
+          <g class="map-node leaf small" data-title="Nervioso" data-content="Alzheimer, Parkinson e ictus condicionan seguridad y dependencia.">
+            <rect x="795" y="605" width="275" height="58" />
+            <text x="932" y="640" text-anchor="middle">Nervioso: Alzheimer y Parkinson</text>
+          </g>
+          <g class="map-node leaf small" data-title="Genitourinario" data-content="Incontinencia, infecciones y problemas prostáticos.">
+            <rect x="795" y="660" width="275" height="58" />
+            <text x="932" y="695" text-anchor="middle">Genitourinario: incontinencia y próstata</text>
+          </g>
+          <g class="map-node leaf small" data-title="Digestivo" data-content="Estreñimiento, malabsorción y problemas de masticación o dieta.">
+            <rect x="795" y="715" width="290" height="58" />
+            <text x="940" y="750" text-anchor="middle">Digestivo: estreñimiento y malabsorción</text>
+          </g>
+
+          <g class="map-node leaf small" data-title="Higiene adaptada" data-content="Debe ajustarse al grado de dependencia, respetando intimidad y ritmo.">
+            <rect x="820" y="705" width="355" height="58" />
+            <text x="997" y="740" text-anchor="middle">Higiene adaptada al grado de dependencia</text>
+          </g>
+          <g class="map-node leaf small" data-title="Movilización" data-content="Movilizar bien previene complicaciones y mantiene funcionalidad.">
+            <rect x="820" y="760" width="280" height="58" />
+            <text x="960" y="795" text-anchor="middle">Movilización y cambios posturales</text>
+          </g>
+          <g class="map-node leaf small" data-title="Úlceras" data-content="Cambios posturales, higiene, hidratación y vigilancia de zonas de riesgo.">
+            <rect x="820" y="815" width="285" height="58" />
+            <text x="962" y="850" text-anchor="middle">Prevención de úlceras por presión</text>
+          </g>
+          <g class="map-node leaf small" data-title="Caídas" data-content="Iluminación, eliminación de obstáculos y ayudas técnicas seguras.">
+            <rect x="820" y="870" width="330" height="58" />
+            <text x="985" y="905" text-anchor="middle">Prevención de caídas y entorno seguro</text>
+          </g>
+          <g class="map-node leaf small" data-title="Nutrición e hidratación" data-content="Apoyo en ingesta, vigilancia de disfagia y registro de balances.">
+            <rect x="820" y="925" width="300" height="58" />
+            <text x="970" y="960" text-anchor="middle">Apoyo en alimentación e hidratación</text>
+          </g>
+
+          <g class="map-node leaf small" data-title="Bienestar" data-content="La prioridad es la calidad de vida y el bienestar integral del paciente.">
+            <rect x="820" y="885" width="355" height="58" />
+            <text x="997" y="920" text-anchor="middle">Objetivo: bienestar integral y calidad de vida</text>
+          </g>
+          <g class="map-node leaf small" data-title="Dolor y síntomas" data-content="La analgesia y el control de disnea, náuseas o estreñimiento son esenciales.">
+            <rect x="820" y="940" width="330" height="58" />
+            <text x="985" y="975" text-anchor="middle">Control del dolor y síntomas (analgesia)</text>
+          </g>
+          <g class="map-node leaf small" data-title="Multidisciplinar" data-content="Participan médicos, enfermeras, TCAE, psicología, trabajo social y más.">
+            <rect x="820" y="995" width="360" height="58" />
+            <text x="1000" y="1030" text-anchor="middle">Atención multidisciplinar y formación específica</text>
+          </g>
+          <g class="map-node branch small" data-title="Principios fundamentales" data-content="Alivio del sufrimiento, aceptación de la muerte natural y apoyo familiar.">
+            <rect x="820" y="1050" width="280" height="58" />
+            <text x="960" y="1085" text-anchor="middle">Principios fundamentales</text>
+          </g>
+          <g class="map-node branch small" data-title="Aspectos éticos" data-content="Autonomía, confidencialidad, declaración anticipada y LET.">
+            <rect x="820" y="1105" width="240" height="58" />
+            <text x="940" y="1140" text-anchor="middle">Aspectos éticos</text>
+          </g>
+
+          <g class="map-node leaf small" data-title="Alivio del sufrimiento" data-content="Se previene y alivia el sufrimiento físico, psicosocial y espiritual.">
+            <rect x="1240" y="1000" width="225" height="58" />
+            <text x="1352" y="1035" text-anchor="middle">Alivio del sufrimiento</text>
+          </g>
+          <g class="map-node leaf small" data-title="Muerte natural" data-content="No se acelera ni retrasa la muerte: se acompaña con dignidad.">
+            <rect x="1240" y="1050" width="260" height="58" />
+            <text x="1370" y="1085" text-anchor="middle">Aceptación de la muerte natural</text>
+          </g>
+          <g class="map-node leaf small" data-title="Apoyo familia" data-content="La familia también necesita información, acompañamiento y apoyo emocional.">
+            <rect x="1240" y="1100" width="245" height="58" />
+            <text x="1362" y="1135" text-anchor="middle">Apoyo a la familia y duelo</text>
+          </g>
+          <g class="map-node leaf small" data-title="Declaraciones anticipadas" data-content="Recogen los deseos del paciente si llega a no poder expresarse.">
+            <rect x="1240" y="1125" width="255" height="58" />
+            <text x="1367" y="1160" text-anchor="middle">Declaraciones anticipadas</text>
+          </g>
+          <g class="map-node leaf small" data-title="LET" data-content="La limitación del esfuerzo terapéutico evita maniobras desproporcionadas.">
+            <rect x="1240" y="1175" width="285" height="58" />
+            <text x="1382" y="1210" text-anchor="middle">Limitación del esfuerzo terapéutico</text>
+          </g>
+          <g class="map-node leaf small" data-title="Autonomía" data-content="Debe respetarse la confidencialidad y la autonomía del paciente.">
+            <rect x="1240" y="1225" width="255" height="58" />
+            <text x="1367" y="1260" text-anchor="middle">Confidencialidad y autonomía</text>
+          </g>
+
+          <g class="map-node branch small" data-title="Fases del duelo" data-content="Shock, dolor y resolución, sin forzar ni minimizar el proceso.">
+            <rect x="820" y="1110" width="210" height="58" />
+            <text x="925" y="1145" text-anchor="middle">Fases del duelo</text>
+          </g>
+          <g class="map-node branch small" data-title="Procedimiento post mortem" data-content="Certificación previa, higiene, amortajamiento, posición e identificación.">
+            <rect x="820" y="1165" width="270" height="58" />
+            <text x="955" y="1200" text-anchor="middle">Procedimiento post mortem</text>
+          </g>
+          <g class="map-node branch small" data-title="Impacto emocional" data-content="Es normal que el TCAE necesite apoyo, reflexión y autocuidado.">
+            <rect x="820" y="1220" width="285" height="58" />
+            <text x="962" y="1255" text-anchor="middle">Impacto emocional en el profesional</text>
+          </g>
+
+          <g class="map-node leaf small" data-title="Shock" data-content="Incredulidad, negación y bloqueo emocional inicial.">
+            <rect x="1240" y="1090" width="190" height="58" />
+            <text x="1335" y="1125" text-anchor="middle">Fase de shock</text>
+          </g>
+          <g class="map-node leaf small" data-title="Dolor" data-content="Tristeza, rabia, culpa o ansiedad con distintas expresiones.">
+            <rect x="1240" y="1140" width="190" height="58" />
+            <text x="1335" y="1175" text-anchor="middle">Fase de dolor</text>
+          </g>
+          <g class="map-node leaf small" data-title="Resolución" data-content="Reorganización progresiva de la vida sin borrar el vínculo emocional.">
+            <rect x="1240" y="1190" width="205" height="58" />
+            <text x="1342" y="1225" text-anchor="middle">Fase de resolución</text>
+          </g>
+          <g class="map-node leaf small" data-title="Certificación" data-content="No se inician cuidados post mortem sin certificación médica oficial.">
+            <rect x="1240" y="1215" width="235" height="58" />
+            <text x="1357" y="1250" text-anchor="middle">Certificación médica previa</text>
+          </g>
+          <g class="map-node leaf small" data-title="Higiene y amortajamiento" data-content="Limpieza, cierre de párpados y boca, preparación del cuerpo y mortaja.">
+            <rect x="1240" y="1265" width="265" height="58" />
+            <text x="1372" y="1300" text-anchor="middle">Higiene básica y amortajamiento</text>
+          </g>
+          <g class="map-node leaf small" data-title="Pre-rigor mortis" data-content="Posicionar el cuerpo antes del rigor facilita cuidados posteriores.">
+            <rect x="1240" y="1315" width="280" height="58" />
+            <text x="1380" y="1350" text-anchor="middle">Posicionamiento pre-rigor mortis</text>
+          </g>
+          <g class="map-node leaf small" data-title="Identificación" data-content="La identificación reglamentaria y la documentación son obligatorias.">
+            <rect x="1240" y="1365" width="250" height="58" />
+            <text x="1365" y="1400" text-anchor="middle">Identificación y documentación</text>
+          </g>
+        </svg>
+          </div>
+        </div>
+      </div>
+
+      <div id="mapInfoBox" class="hidden mt-5 rounded-3xl bg-indigo-50 border border-indigo-100 p-5 fade-in">
+        <p class="font-bold text-indigo-900 mb-2">Cómo estudiar este mapa</p>
+        <p class="text-sm text-indigo-800 leading-relaxed">Empieza por la izquierda y sigue el recorrido de cada rama. Primero identifica el bloque general, luego sus subbloques y por último las ideas concretas. Puedes pasar el ratón por los nodos y hacer clic para ver una explicación breve debajo.</p>
+      </div>
+
+      <div id="nodeDetail" class="mt-5 rounded-3xl bg-slate-900 text-white p-5 md:p-6 hidden fade-in">
+        <p class="text-xs uppercase tracking-[0.2em] text-indigo-300 font-bold">Detalle del nodo</p>
+        <h3 id="nodeDetailTitle" class="text-2xl font-bold mt-2"></h3>
+        <p id="nodeDetailText" class="text-slate-200 mt-3 leading-relaxed"></p>
+      </div>
+    </section>
+
+    <section class="bg-white rounded-[2rem] border border-slate-200 shadow-lg p-6 md:p-8">
+      <div class="mb-6">
+        <span class="badge bg-emerald-100 text-emerald-700">Imágenes y apoyo visual</span>
+        <h2 class="text-3xl font-extrabold text-slate-900 mt-3">Galería de recursos sanitarios</h2>
+        <p class="text-slate-600 mt-2 max-w-3xl">La página está preparada para mostrar imágenes con buena calidad, proporción estable y carga eficiente. He dejado tres espacios listos para sustituir por fotografías sanitarias propias en alta resolución.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+        <figure class="rounded-[1.5rem] border border-slate-200 overflow-hidden bg-white shadow-sm">
+          <img src="img/anciano-cuidados.jpg" alt="Paciente anciano recibiendo cuidados básicos" class="resource-image" loading="lazy" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 800 500\'><rect width=\'800\' height=\'500\' fill=\'%23f8fafc\'/><rect x=\'40\' y=\'40\' width=\'720\' height=\'420\' rx=\'32\' fill=\'%23e2e8f0\'/><text x=\'400\' y=\'220\' text-anchor=\'middle\' font-size=\'28\' fill=\'%23475569\' font-family=\'Arial\'>Añade aquí una imagen real</text><text x=\'400\' y=\'265\' text-anchor=\'middle\' font-size=\'24\' fill=\'%23475569\' font-family=\'Arial\'>img/anciano-cuidados.jpg</text></svg>'">
+          <figcaption class="p-4 text-sm text-slate-600"><strong class="text-slate-900">Bloque 1:</strong> cuidados básicos, higiene o movilización del anciano.</figcaption>
+        </figure>
+
+        <figure class="rounded-[1.5rem] border border-slate-200 overflow-hidden bg-white shadow-sm">
+          <img src="img/cuidados-paliativos.jpg" alt="Acompañamiento en cuidados paliativos" class="resource-image" loading="lazy" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 800 500\'><rect width=\'800\' height=\'500\' fill=\'%23f8fafc\'/><rect x=\'40\' y=\'40\' width=\'720\' height=\'420\' rx=\'32\' fill=\'%23e2e8f0\'/><text x=\'400\' y=\'220\' text-anchor=\'middle\' font-size=\'28\' fill=\'%23475569\' font-family=\'Arial\'>Añade aquí una imagen real</text><text x=\'400\' y=\'265\' text-anchor=\'middle\' font-size=\'24\' fill=\'%23475569\' font-family=\'Arial\'>img/cuidados-paliativos.jpg</text></svg>'">
+          <figcaption class="p-4 text-sm text-slate-600"><strong class="text-slate-900">Bloque 2:</strong> confort, acompañamiento y dignidad en fase terminal.</figcaption>
+        </figure>
+
+        <figure class="rounded-[1.5rem] border border-slate-200 overflow-hidden bg-white shadow-sm">
+          <img src="img/postmortem.jpg" alt="Material o contexto de cuidados post mortem" class="resource-image" loading="lazy" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 800 500\'><rect width=\'800\' height=\'500\' fill=\'%23f8fafc\'/><rect x=\'40\' y=\'40\' width=\'720\' height=\'420\' rx=\'32\' fill=\'%23e2e8f0\'/><text x=\'400\' y=\'220\' text-anchor=\'middle\' font-size=\'28\' fill=\'%23475569\' font-family=\'Arial\'>Añade aquí una imagen real</text><text x=\'400\' y=\'265\' text-anchor=\'middle\' font-size=\'24\' fill=\'%23475569\' font-family=\'Arial\'>img/postmortem.jpg</text></svg>'">
+          <figcaption class="p-4 text-sm text-slate-600"><strong class="text-slate-900">Bloque 3:</strong> protocolo, respeto, identificación y documentación.</figcaption>
+        </figure>
+      </div>
+
+      <div class="mt-6 rounded-[1.5rem] bg-slate-50 border border-slate-200 p-5">
+        <p class="font-bold text-slate-900 mb-2">Cómo mantener buena calidad de imagen</p>
+        <ul class="text-sm text-slate-600 space-y-2 list-disc pl-5">
+          <li>Usa archivos JPG o WEBP de al menos 1600 px de ancho.</li>
+          <li>Mantén nombres simples y colócalos en una carpeta <code>img/</code>.</li>
+          <li>La maquetación ya evita deformaciones gracias a <code>object-fit: cover</code> y proporción fija.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="bg-white rounded-[2rem] border border-slate-200 shadow-lg p-6 md:p-8">
+      <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-6">
+        <div>
+          <span class="badge bg-amber-100 text-amber-700">Autoevaluación</span>
+          <h2 class="text-3xl font-extrabold text-slate-900 mt-3">Test interactivo tipo Google Forms</h2>
+          <p class="text-slate-600 mt-2 max-w-3xl">Las preguntas se basan en el contenido del tema: envejecimiento, cuidados al anciano, paliativos, duelo y post mortem.</p>
+        </div>
+        <div class="flex gap-3">
+          <button id="resetQuiz" class="rounded-2xl border border-slate-300 px-5 py-3 font-semibold text-slate-700 hover:bg-slate-50 transition-all">Reiniciar test</button>
+          <button id="showScore" class="rounded-2xl bg-indigo-600 text-white px-5 py-3 font-semibold hover:bg-indigo-500 transition-all">Ver puntuación</button>
+        </div>
+      </div>
+
+      <div id="quizContainer" class="space-y-5"></div>
+
+      <div id="quizSummary" class="hidden mt-6 rounded-[1.5rem] border border-indigo-200 bg-indigo-50 p-5 fade-in">
+        <p class="text-xs font-bold uppercase tracking-[0.18em] text-indigo-700">Resultado</p>
+        <h3 id="quizScoreText" class="text-2xl font-extrabold text-slate-900 mt-2"></h3>
+        <p id="quizFeedback" class="text-slate-700 mt-2"></p>
+      </div>
+    </section>
+
+    <footer class="text-center py-8 text-slate-500 text-sm">
+      <p class="font-semibold uppercase tracking-[0.18em] text-xs">Repositorio de recursos sanitarios · Asturias</p>
+      <p class="mt-2">Tema 15 · El Anciano y el Paciente Terminal</p>
+    </footer>
+  </div>
+
+  <div id="miniModal" class="fixed inset-0 bg-slate-950/55 hidden items-center justify-center p-4 z-50">
+    <div class="bg-white max-w-lg w-full rounded-[2rem] p-7 shadow-2xl border border-slate-200 fade-in">
+      <div class="flex items-start justify-between gap-4">
+        <div>
+          <p class="text-xs uppercase tracking-[0.18em] text-indigo-600 font-bold">Ayuda de estudio</p>
+          <h3 class="text-2xl font-bold text-slate-900 mt-2">Usa el mapa como ruta</h3>
+        </div>
+        <button id="closeMiniModal" class="p-2 rounded-full bg-slate-100 hover:bg-slate-200">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+      <div class="text-slate-600 mt-4 space-y-3 leading-relaxed">
+        <p><strong class="text-slate-900">Paso 1:</strong> ubica el bloque general en azul.</p>
+        <p><strong class="text-slate-900">Paso 2:</strong> sigue cada rama y verbaliza las ideas principales.</p>
+        <p><strong class="text-slate-900">Paso 3:</strong> termina con el test para comprobar retención.</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+
+    const nodeDetail = document.getElementById('nodeDetail');
+    const nodeDetailTitle = document.getElementById('nodeDetailTitle');
+    const nodeDetailText = document.getElementById('nodeDetailText');
+    const mapInfoBox = document.getElementById('mapInfoBox');
+    const openMapInfo = document.getElementById('openMapInfo');
+    const toggleMap = document.getElementById('toggleMap');
+    const mapContainer = document.getElementById('mapContainer');
+    const miniModal = document.getElementById('miniModal');
+    const closeMiniModal = document.getElementById('closeMiniModal');
+    const closeMapModal = document.getElementById('closeMapModal');
+
+    document.querySelectorAll('.map-node').forEach(node => {
+      node.style.cursor = 'pointer';
+      node.addEventListener('click', () => {
+        const title = node.dataset.title || 'Nodo';
+        const content = node.dataset.content || 'Sin detalle disponible.';
+        nodeDetailTitle.textContent = title;
+        nodeDetailText.textContent = content;
+        nodeDetail.classList.remove('hidden');
+      });
+    });
+
+    toggleMap.addEventListener('click', () => {
+      mapContainer.classList.remove('hidden');
+      mapContainer.classList.add('flex');
+      document.body.style.overflow = 'hidden';
+      lucide.createIcons();
+    });
+
+    function closeMapOverlay() {
+      mapContainer.classList.add('hidden');
+      mapContainer.classList.remove('flex');
+      document.body.style.overflow = '';
+    }
+
+    closeMapModal.addEventListener('click', closeMapOverlay);
+
+    mapContainer.addEventListener('click', (e) => {
+      if (e.target === mapContainer) closeMapOverlay();
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !mapContainer.classList.contains('hidden')) {
+        closeMapOverlay();
+      }
+    });
+
+    openMapInfo.addEventListener('click', () => {
+      mapInfoBox.classList.toggle('hidden');
+      miniModal.classList.remove('hidden');
+      miniModal.classList.add('flex');
+      lucide.createIcons();
+    });
+
+    closeMiniModal.addEventListener('click', () => {
+      miniModal.classList.add('hidden');
+      miniModal.classList.remove('flex');
+    });
+
+    miniModal.addEventListener('click', (e) => {
+      if (e.target === miniModal) {
+        miniModal.classList.add('hidden');
+        miniModal.classList.remove('flex');
+      }
+    });
+
+    const quizData = [
+      {
+        question: '1. El envejecimiento se define principalmente como:',
+        options: [
+          'Una enfermedad degenerativa inevitable',
+          'Un proceso biológico progresivo e irreversible',
+          'Una etapa que afecta solo al sistema locomotor',
+          'Un cambio psicológico dependiente del entorno'
+        ],
+        answer: 1,
+        explanation: 'El tema lo presenta como un proceso fisiológico progresivo e irreversible que afecta a todos los sistemas.'
+      },
+      {
+        question: '2. ¿Qué cambio físico es típico en la vejez?',
+        options: [
+          'Aumento de colágeno y elasticidad cutánea',
+          'Mejora de la termorregulación',
+          'Piel fina, seca y frágil',
+          'Incremento de la masa muscular'
+        ],
+        answer: 2,
+        explanation: 'La piel pierde elasticidad y protección, por eso se vuelve más vulnerable.'
+      },
+      {
+        question: '3. La sarcopenia produce sobre todo:',
+        options: [
+          'Mejor capacidad funcional',
+          'Pérdida de fuerza y masa muscular',
+          'Aumento del tejido adiposo protector',
+          'Mayor resistencia al esfuerzo'
+        ],
+        answer: 1,
+        explanation: 'La sarcopenia reduce la fuerza y compromete la movilidad y la autonomía.'
+      },
+      {
+        question: '4. Un riesgo psicosocial frecuente en el anciano es:',
+        options: [
+          'Hipervigilancia sensorial',
+          'Exceso de participación comunitaria',
+          'Soledad y aislamiento',
+          'Mayor tolerancia al estrés'
+        ],
+        answer: 2,
+        explanation: 'La reducción de relaciones sociales favorece el aislamiento y la soledad.'
+      },
+      {
+        question: '5. Entre las patologías cardiovasculares frecuentes en ancianos destaca:',
+        options: [
+          'Hipertensión arterial',
+          'Apendicitis aguda',
+          'Miopía funcional',
+          'Hepatitis viral aguda'
+        ],
+        answer: 0,
+        explanation: 'La hipertensión es muy prevalente y requiere control y seguimiento.'
+      },
+      {
+        question: '6. En un paciente anciano inmovilizado, la medida clave para prevenir UPP es:',
+        options: [
+          'Disminuir la hidratación',
+          'Evitar cualquier movilización',
+          'Realizar cambios posturales regulares',
+          'Aplicar calor directo en prominencias óseas'
+        ],
+        answer: 2,
+        explanation: 'Los cambios posturales y la vigilancia cutánea son pilares preventivos.'
+      },
+      {
+        question: '7. Para prevenir caídas, una intervención correcta del TCAE es:',
+        options: [
+          'Apagar luces por la noche para favorecer el descanso',
+          'Eliminar obstáculos y asegurar buena iluminación',
+          'Retirar todas las ayudas técnicas',
+          'Limitar la hidratación para evitar desplazamientos al baño'
+        ],
+        answer: 1,
+        explanation: 'La seguridad ambiental es básica en la prevención de caídas.'
+      },
+      {
+        question: '8. En cuidados paliativos, el objetivo principal pasa a ser:',
+        options: [
+          'Curar la enfermedad a toda costa',
+          'Aumentar el número de pruebas diagnósticas',
+          'Mejorar la calidad de vida y el confort',
+          'Reducir el contacto familiar'
+        ],
+        answer: 2,
+        explanation: 'El foco deja de ser la curación y se centra en bienestar y dignidad.'
+      },
+      {
+        question: '9. Una medida propia del confort en paliativos es:',
+        options: [
+          'Ambiente tranquilo y posicionamiento adecuado',
+          'Aislamiento total del paciente',
+          'Suspender toda higiene',
+          'Forzar la ingesta completa de alimentos'
+        ],
+        answer: 0,
+        explanation: 'El control del entorno y la postura ayuda a reducir dolor, disnea y malestar.'
+      },
+      {
+        question: '10. ¿Qué principio ético debe respetar el TCAE en paliativos?',
+        options: [
+          'Autonomía y confidencialidad del paciente',
+          'Ocultar información siempre a la familia',
+          'Aplicar medidas agresivas sin indicación',
+          'Ignorar las declaraciones anticipadas'
+        ],
+        answer: 0,
+        explanation: 'La autonomía y la confidencialidad son bases éticas esenciales.'
+      },
+      {
+        question: '11. Antes de iniciar los cuidados post mortem es imprescindible:',
+        options: [
+          'Realizar el amortajamiento de inmediato',
+          'La certificación médica oficial del fallecimiento',
+          'Trasladar al paciente sin identificarlo',
+          'Retirar objetos personales sin registro'
+        ],
+        answer: 1,
+        explanation: 'No puede iniciarse el procedimiento sin certificación médica previa.'
+      },
+      {
+        question: '12. En el duelo, la fase de shock se caracteriza por:',
+        options: [
+          'Aceptación serena inmediata',
+          'Negación o incredulidad inicial',
+          'Resolución completa del dolor',
+          'Ausencia total de emociones'
+        ],
+        answer: 1,
+        explanation: 'El shock es la reacción inicial de incredulidad, negación o bloqueo.'
+      }
+    ];
+
+    const quizContainer = document.getElementById('quizContainer');
+    const quizSummary = document.getElementById('quizSummary');
+    const quizScoreText = document.getElementById('quizScoreText');
+    const quizFeedback = document.getElementById('quizFeedback');
+    const showScore = document.getElementById('showScore');
+    const resetQuiz = document.getElementById('resetQuiz');
+
+    function renderQuiz() {
+      quizContainer.innerHTML = '';
+      quizData.forEach((item, qIndex) => {
+        const card = document.createElement('article');
+        card.className = 'rounded-[1.5rem] border border-slate-200 p-5 md:p-6 bg-slate-50';
+        card.innerHTML = `
+          <div class="flex items-start justify-between gap-4">
+            <h3 class="text-lg font-bold text-slate-900 leading-snug">${item.question}</h3>
+            <span class="text-xs font-bold uppercase tracking-[0.16em] text-slate-400">Pregunta ${qIndex + 1}</span>
+          </div>
+          <div class="grid grid-cols-1 gap-3 mt-5" data-question="${qIndex}"></div>
+          <div id="feedback-${qIndex}" class="hidden mt-4 rounded-2xl p-4 text-sm"></div>
+        `;
+
+        const optionsBox = card.querySelector(`[data-question="${qIndex}"]`);
+        item.options.forEach((option, oIndex) => {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'quiz-option rounded-2xl bg-white px-4 py-3 text-left text-slate-700 font-medium';
+          btn.innerHTML = `<span class="font-bold mr-2">${String.fromCharCode(65 + oIndex)}.</span> ${option}`;
+          btn.addEventListener('click', () => handleAnswer(qIndex, oIndex, optionsBox, btn));
+          optionsBox.appendChild(btn);
+        });
+
+        quizContainer.appendChild(card);
+      });
+    }
+
+    const userAnswers = new Array(quizData.length).fill(null);
+
+    function handleAnswer(qIndex, selected, optionsBox) {
+      if (userAnswers[qIndex] !== null) return;
+      userAnswers[qIndex] = selected;
+
+      const correct = quizData[qIndex].answer;
+      [...optionsBox.children].forEach((button, idx) => {
+        button.classList.add('disabled');
+        if (idx === correct) button.classList.add('correct');
+        if (idx === selected && idx !== correct) button.classList.add('incorrect');
+      });
+
+      const feedback = document.getElementById(`feedback-${qIndex}`);
+      const isCorrect = selected === correct;
+      feedback.classList.remove('hidden');
+      feedback.className = `mt-4 rounded-2xl p-4 text-sm ${isCorrect ? 'bg-green-50 text-green-800 border border-green-200' : 'bg-red-50 text-red-800 border border-red-200'}`;
+      feedback.innerHTML = `<strong>${isCorrect ? 'Correcta.' : 'Incorrecta.'}</strong> ${quizData[qIndex].explanation}`;
+    }
+
+    function calculateScore() {
+      let score = 0;
+      userAnswers.forEach((answer, index) => {
+        if (answer === quizData[index].answer) score++;
+      });
+      return score;
+    }
+
+    showScore.addEventListener('click', () => {
+      const answered = userAnswers.filter(v => v !== null).length;
+      const score = calculateScore();
+      quizSummary.classList.remove('hidden');
+      quizScoreText.textContent = `Has acertado ${score} de ${quizData.length} preguntas.`;
+
+      let feedback = 'Buen trabajo. Sigue repasando el mapa conceptual y vuelve a intentarlo.';
+      if (score === quizData.length) feedback = 'Excelente. Dominas muy bien el tema.';
+      else if (score >= 9) feedback = 'Muy buen nivel. Solo te falta afinar algunos detalles.';
+      else if (score >= 6) feedback = 'Base sólida, pero te conviene reforzar paliativos y post mortem.';
+      else if (answered < quizData.length) feedback = 'Aún no has contestado todo. Termina el test para tener una medida más real.';
+      else if (score < 6) feedback = 'Necesitas repasar con calma. Empieza por las ramas principales del mapa y vuelve al test.';
+
+      quizFeedback.textContent = feedback;
+    });
+
+    resetQuiz.addEventListener('click', () => {
+      for (let i = 0; i < userAnswers.length; i++) userAnswers[i] = null;
+      quizSummary.classList.add('hidden');
+      renderQuiz();
+    });
+
+    renderQuiz();
+  </script>
+</body>
+</html>
