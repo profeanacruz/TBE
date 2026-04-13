@@ -41,7 +41,7 @@ img {
 }
 
 .hero-contenido {
-  max-width: 1200px;
+  max-width: 1280px;
   margin: 0 auto;
 }
 
@@ -60,7 +60,7 @@ img {
 }
 
 .subtitulo {
-  max-width: 800px;
+  max-width: 850px;
   font-size: 1.08rem;
   opacity: 0.96;
   margin-bottom: 24px;
@@ -87,7 +87,7 @@ img {
 }
 
 .contenedor {
-  max-width: 1200px;
+  max-width: 1280px;
   margin: 0 auto;
   padding: 36px 20px 60px;
 }
@@ -110,8 +110,8 @@ img {
 
 .grid-tarjetas {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 22px;
+  grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+  gap: 24px;
 }
 
 .card-dispositivo {
@@ -130,8 +130,11 @@ img {
 
 .card-dispositivo img {
   width: 100%;
-  aspect-ratio: 4 / 3;
-  object-fit: cover;
+  height: auto;
+  max-height: 720px;
+  object-fit: contain;
+  background: #f8fafc;
+  padding: 10px;
 }
 
 .card-contenido {
@@ -265,6 +268,12 @@ tbody tr:nth-child(even) {
   color: var(--muted);
 }
 
+@media (max-width: 980px) {
+  .grid-tarjetas {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (max-width: 768px) {
   .hero {
     padding: 48px 16px 34px;
@@ -286,5 +295,8 @@ tbody tr:nth-child(even) {
   .flip-card-inner {
     height: 320px;
   }
-}
 
+  table {
+    min-width: 760px;
+  }
+}
