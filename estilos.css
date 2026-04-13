@@ -201,6 +201,8 @@ tbody tr:nth-child(even) {
   background: transparent;
   perspective: 1200px;
   min-height: 280px;
+  cursor: pointer;
+  outline: none;
 }
 
 .flip-card-inner {
@@ -213,8 +215,8 @@ tbody tr:nth-child(even) {
 }
 
 .flip-card:hover .flip-card-inner,
-.flip-card:focus-within .flip-card-inner,
-.flip-card:active .flip-card-inner {
+.flip-card:focus .flip-card-inner,
+.flip-card.girada .flip-card-inner {
   transform: rotateY(180deg);
 }
 
