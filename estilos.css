@@ -1,1 +1,290 @@
+:root {
+  --bg: #f5f7fb;
+  --surface: #ffffff;
+  --surface-2: #eef4ff;
+  --text: #1f2937;
+  --muted: #5b6472;
+  --primary: #2155a3;
+  --primary-soft: #dbe8ff;
+  --accent: #0f766e;
+  --border: #d9e1ee;
+  --shadow: 0 10px 30px rgba(20, 35, 70, 0.08);
+  --radius: 18px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", Roboto, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+  border-radius: 14px;
+}
+
+.hero {
+  background: linear-gradient(135deg, #163b73, #2b6ccb);
+  color: white;
+  padding: 64px 20px 42px;
+}
+
+.hero-contenido {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.82rem;
+  opacity: 0.9;
+  margin-bottom: 8px;
+}
+
+.hero h1 {
+  margin: 0 0 14px;
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  line-height: 1.1;
+}
+
+.subtitulo {
+  max-width: 800px;
+  font-size: 1.08rem;
+  opacity: 0.96;
+  margin-bottom: 24px;
+}
+
+.nav-anclas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.nav-anclas a {
+  text-decoration: none;
+  color: white;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  padding: 10px 16px;
+  border-radius: 999px;
+  transition: 0.25s ease;
+}
+
+.nav-anclas a:hover {
+  background: rgba(255, 255, 255, 0.24);
+}
+
+.contenedor {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 36px 20px 60px;
+}
+
+.seccion {
+  margin-bottom: 58px;
+}
+
+.seccion h2 {
+  font-size: 2rem;
+  margin-bottom: 12px;
+  color: var(--primary);
+}
+
+.intro {
+  max-width: 850px;
+  color: var(--muted);
+  margin-bottom: 26px;
+}
+
+.grid-tarjetas {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 22px;
+}
+
+.card-dispositivo {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card-dispositivo:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 34px rgba(20, 35, 70, 0.12);
+}
+
+.card-dispositivo img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
+
+.card-contenido {
+  padding: 18px 18px 20px;
+}
+
+.card-contenido h3 {
+  margin-top: 0;
+  margin-bottom: 14px;
+  color: var(--primary);
+  font-size: 1.15rem;
+}
+
+.tabla-wrapper {
+  overflow-x: auto;
+  background: var(--surface);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 900px;
+}
+
+thead {
+  background: var(--primary);
+  color: white;
+}
+
+th,
+td {
+  text-align: left;
+  padding: 15px 14px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+
+tbody tr:nth-child(even) {
+  background: #fafcff;
+}
+
+.casos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+  gap: 28px;
+}
+
+.caso-bloque {
+  background: transparent;
+}
+
+.caso-titulo {
+  margin: 0 0 10px;
+  color: var(--primary);
+}
+
+.caso-enunciado {
+  margin: 0 0 16px;
+  color: var(--muted);
+  min-height: 96px;
+}
+
+.flip-card {
+  background: transparent;
+  perspective: 1200px;
+  min-height: 280px;
+  cursor: pointer;
+  outline: none;
+}
+
+.flip-card-inner {
+  position: relative;
+  width: 100%;
+  height: 280px;
+  text-align: center;
+  transition: transform 0.7s;
+  transform-style: preserve-3d;
+}
+
+.flip-card:hover .flip-card-inner,
+.flip-card:focus .flip-card-inner,
+.flip-card.girada .flip-card-inner {
+  transform: rotateY(180deg);
+}
+
+.flip-card-front,
+.flip-card-back {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.flip-card-front {
+  background: linear-gradient(160deg, #ffffff, #edf4ff);
+}
+
+.flip-card-back {
+  background: linear-gradient(160deg, #dff7f3, #ffffff);
+  transform: rotateY(180deg);
+}
+
+.flip-card-front h4,
+.flip-card-back h4 {
+  margin-top: 0;
+  margin-bottom: 10px;
+  color: var(--primary);
+}
+
+.gira {
+  display: inline-block;
+  margin-top: 14px;
+  font-size: 0.92rem;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.footer {
+  text-align: center;
+  padding: 24px 20px 40px;
+  color: var(--muted);
+}
+
+@media (max-width: 768px) {
+  .hero {
+    padding: 48px 16px 34px;
+  }
+
+  .contenedor {
+    padding: 28px 16px 48px;
+  }
+
+  .seccion h2 {
+    font-size: 1.65rem;
+  }
+
+  .caso-enunciado {
+    min-height: auto;
+  }
+
+  .flip-card,
+  .flip-card-inner {
+    height: 320px;
+  }
+}
 
